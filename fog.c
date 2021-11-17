@@ -2,13 +2,25 @@
 
 double cube(double);
 double inv(double);
-double fog(double (*)(double), double (*)(double), double);
 
-double fog(double (*f)(double), double (*g)(double), double x) {
+// Define a type for a pointer to a function which gets a double and returns a double too
+typedef double (*fp_double_in_double_out)(double);
+
+
+double fog(fp_double_in_double_out, fp_double_in_double_out, double);
+
+// This function gets two function pointer and an input value and returns a return value
+double fog(fp_double_in_double_out f, fp_double_in_double_out g, double x) {
 	double y = (*g)(x);
 	double z = (*f)(y);
 	return z;
 }
+
+// Is it possible to define a function which only rakes two function pointer and returns 
+// a function pointer of fog?
+
+
+
 
 double cube(double x) {
 	return x*x*x;
