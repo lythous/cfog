@@ -16,9 +16,15 @@ double fog(fp_double_in_double_out f, fp_double_in_double_out g, double x) {
 	return z;
 }
 
+
 // Is it possible to define a function which only rakes two function pointer and returns 
 // a function pointer of fog?
 
+// Function simple wrapper
+fp_double_in_double_out func_wrapper(fp_double_in_double_out f) {
+    printf("running f\n");
+    return f;
+}
 
 
 
@@ -34,5 +40,7 @@ int main(void) {
 	printf("Salam\n");
 	printf("%f\n", cube(inv(0.5)));
 	printf("%f\n", fog(cube, inv, 0.5));
+	printf("%f\n", (*func_wrapper(cube))(5));
+	printf("%f\n", (*func_wrapper(inv))(5));
 	return 0;
 }
