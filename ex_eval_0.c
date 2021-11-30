@@ -109,18 +109,19 @@ void fnode_init_as_func_2in(fnode *fn, func_ptr_2in func, fnode *in1_fn, fnode *
 }
 
 
+
 void test(void) {
-	fnode *fn = malloc(4*sizeof(fnode));
+	fnode *fn_array = malloc(4*sizeof(fnode));
 	int fn_size = 4;
-	if (fn) {
-		fnode_init_as_var(&fn[0], 0.5, "x1");
-		fnode_init_as_var(&fn[1], 3.1415, "x2");
-		fnode_init_as_func_2in(&fn[2], mul, &fn[0], &fn[1], 0);
-		fnode_init_as_func_1in(&fn[3], sin, &fn[2], 0);	
-		printf("%f\n", eval(&fn[3]));
+	if (fn_array) {
+		fnode_init_as_var(&fn_array[0], 0.5, "x1");
+		fnode_init_as_var(&fn_array[1], 3.1415, "x2");
+		fnode_init_as_func_2in(&fn_array[2], mul, &fn_array[0], &fn_array[1], 0);
+		fnode_init_as_func_1in(&fn_array[3], sin, &fn_array[2], 0);	
+		printf("%f\n", eval(&fn_array[3]));
 	}
 
-	free(fn);
+	free(fn_array);
 }
 
 
