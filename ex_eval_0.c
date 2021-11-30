@@ -1,4 +1,5 @@
 # include <stdio.h>
+# include <stdlib.h>
 # include <math.h>
 
 /* ALL INPUT AND OUTPUT NUMBERS FOR ALL FUNCTIONS ARE OF DOUBLE TYPE. */
@@ -15,7 +16,13 @@ typedef struct function_node {
 	struct function_node	*in_1;
 	struct function_node	*in_2;
 	double					out;
+	char					*name;
 } fnode;
+
+typedef struct fn_identifier_ {
+	fnode	*fn;
+	char	*identifier;
+} fn_identifier;
 
 
 /* Define types for function pointers */
@@ -28,7 +35,7 @@ void test(void);
 double eval(fnode*);
 double mul(double, double);
 void fnode_set_val(fnode*, double);
-void fnode_init_as_var(fnode*, double);
+void fnode_init_as_var(fnode*, double, char*);
 void fnode_init_as_func_1in(fnode*, func_ptr_1in, fnode*, double);
 
 
@@ -72,12 +79,17 @@ double mul(double x, double y) {
 	return x*y;
 }
 
+
+/*
+ * Some functions to initialize different types of function nodes and improve readability 
+ */
 void fnode_set_val(fnode *fn, double value) {
 	fn->out = value;
 }
 
-void fnode_init_as_var(fnode *fn, double init_value) {
+void fnode_init_as_var(fnode *fn, double init_value, char *name) {
 	fnode_set_val(fn, init_value);
+	fn->name = name;
 	fn->in_1 = NULL;
 	fn->in_2 = NULL;	
 }
@@ -98,14 +110,17 @@ void fnode_init_as_func_2in(fnode *fn, func_ptr_2in func, fnode *in1_fn, fnode *
 
 
 void test(void) {
-	fnode x1, x2, fn1, fn2;
+	fnode *fn = malloc(4*sizeof(fnode));
+	int fn_size = 4;
+	if (fn) {
+		fnode_init_as_var(&fn[0], 0.5, "x1");
+		fnode_init_as_var(&fn[1], 3.1415, "x2");
+		fnode_init_as_func_2in(&fn[2], mul, &fn[0], &fn[1], 0);
+		fnode_init_as_func_1in(&fn[3], sin, &fn[2], 0);	
+		printf("%f\n", eval(&fn[3]));
+	}
 
-	fnode_init_as_var(&x1, 0.5);
-	fnode_init_as_var(&x2, 3.1415);
-	fnode_init_as_func_2in(&fn1, mul, &x1, &x2, 0);
-	fnode_init_as_func_1in(&fn2, sin, &fn1, 0);	
-	
-	printf("%f\n", eval(&fn2));
+	free(fn);
 }
 
 
