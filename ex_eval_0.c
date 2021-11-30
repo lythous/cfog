@@ -8,8 +8,8 @@
 /* 
  * Each function node contain output and inputs and operation function pointer.
  * Variables for simplicity has been defined as function node; If both of input
- * pointers are NULL then the node is variable. Otherwise its single input or
- * double input function.
+ * pointers are NULL then the node is a variable. Otherwise its a single or double 
+ * input input function.
  */
 typedef struct function_node {
 	void					*func;
@@ -37,6 +37,7 @@ double mul(double, double);
 void fnode_set_val(fnode*, double);
 void fnode_init_as_var(fnode*, double, char*);
 void fnode_init_as_func_1in(fnode*, func_ptr_1in, fnode*, double);
+fnode *get_fn_by_name(fnode *, int, char *);
 
 
 /* Evaluate a function node hierarchically (from that node to the lower nodes) */
@@ -109,6 +110,14 @@ void fnode_init_as_func_2in(fnode *fn, func_ptr_2in func, fnode *in1_fn, fnode *
 }
 
 
+/* Get a pointer to a function node by its name */
+fnode *get_fn_by_name(fnode *fn_array, int fn_size, char *name) {
+	for (int i=0; i<fn_size; i++) {
+		if (fn_array[i].name == name)
+			return &fn_array[i];
+	}
+	return NULL;
+}
 
 void test(void) {
 	fnode *fn_array = malloc(4*sizeof(fnode));
@@ -118,6 +127,8 @@ void test(void) {
 		fnode_init_as_var(&fn_array[1], 3.1415, "x2");
 		fnode_init_as_func_2in(&fn_array[2], mul, &fn_array[0], &fn_array[1], 0);
 		fnode_init_as_func_1in(&fn_array[3], sin, &fn_array[2], 0);	
+		printf("%f\n", eval(&fn_array[3]));
+		get_fn_by_name(fn_array, 4, "x2")->out = 3;
 		printf("%f\n", eval(&fn_array[3]));
 	}
 
