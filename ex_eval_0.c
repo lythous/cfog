@@ -4,11 +4,12 @@
 /* ALL INPUT AND OUTPUT NUMBERS FOR ALL FUNCTIONS ARE OF DOUBLE TYPE. */
 
 
-/* 	Each function node contain output and inputs and operation function pointer.
-	Variables for simplicity has been defined as function node; If both of input
-	pointers are NULL then the node is variable. Otherwise its single input or
-	double input function.
-*/
+/* 
+ * Each function node contain output and inputs and operation function pointer.
+ * Variables for simplicity has been defined as function node; If both of input
+ * pointers are NULL then the node is variable. Otherwise its single input or
+ * double input function.
+ */
 typedef struct function_node {
 	void					*func;
 	struct function_node	*in_1;
@@ -34,20 +35,20 @@ void fnode_init_as_func_1in(fnode*, func_ptr_1in, fnode*, double);
 /* Evaluate a function node hierarchically (from that node to the lower nodes) */
 double eval(fnode *fn) {
 	/* Node Type: Function [2 Input; 1 output] */
-	if ((fn->in_1!=NULL) && (fn->in_2!=NULL)) {
+	if ((fn->in_1) && (fn->in_2)) {
 		func_ptr_2in func = (func_ptr_2in)fn->func;
 		eval(fn->in_1);
 		eval(fn->in_2);
 		fn->out = func(fn->in_1->out, fn->in_2->out);
 	}
 	/* Node Type: Function [1 Input; 1 output] */
-	if ((fn->in_1!=NULL) && (fn->in_2==NULL)) {
+	if ((fn->in_1) && !(fn->in_2)) {
 		func_ptr_1in func = (func_ptr_1in)fn->func;
 		eval(fn->in_1);
 		fn->out = func(fn->in_1->out);
 	}
 	/* Node Type: Variable */
-	if ((fn->in_1==NULL) && (fn->in_2==NULL)) {
+	if (!(fn->in_1) && !(fn->in_2)) {
 	}
 	return fn->out;
 }
@@ -55,11 +56,11 @@ double eval(fnode *fn) {
 
 /* Evaluate a function node without evaluating lower nodes */
 double shallow_eval(fnode *fn) {
-	if ((fn->in_1!=NULL) && (fn->in_2!=NULL)) {
+	if ((fn->in_1) && (fn->in_2)) {
 		func_ptr_2in func = (func_ptr_2in)fn->func;
 		fn->out = func(fn->in_1->out, fn->in_2->out);
 	}
-	if ((fn->in_1!=NULL) && (fn->in_2==NULL)) {
+	if ((fn->in_1) && !(fn->in_2)) {
 		func_ptr_1in func = (func_ptr_1in)fn->func;
 		fn->out = func(fn->in_1->out);
 	}
